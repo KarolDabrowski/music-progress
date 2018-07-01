@@ -2,14 +2,81 @@
   <div class="py-5 text-center">
     <h2>
       <i class="fa fa-music mr-2"></i> Music progress</h2>
-    <!-- <p class="lead">Below is an example form built entirely with Bootstrap's form controls. Each required form group has a validation state
-      that can be triggered by attempting to submit the form without completing it.</p> -->
+    <p class="lead">Zaznacz ćwiczenie w tabeli, aby rozpocząć.</p>
   </div>
 
   <div class="row">
     <div class="col-12">
 
-      <div class="row mb-5">
+      <div class="d-flex align-items-center mb-2">
+        <button class="btn btn-primary mr-1"
+                (click)="startButtonClicked()"
+                [disabled]="actionButtonDisabled()">
+          <i class="fa fa-play"
+             aria-hidden="true"></i>
+        </button>
+        <button class="btn btn-default mr-2"
+                (click)="pauseButtonClicked()"
+                [disabled]="actionButtonDisabled()">
+          <i class="fa fa-pause"
+             aria-hidden="true"></i>
+        </button>
+        <span *ngIf="this.state.running"
+              class="text-danger">Trwa ćwiczenie...</span>
+        <!-- <button class="btn btn-default mr-1"
+                (click)="pauseButtonClicked()">
+
+        </button> -->
+        <!-- <button class="btn btn-default mr-2"
+                (click)="stopButtonClicked()"
+                [disabled]="actionButtonDisabled()">Stop</button> -->
+        <div class="form-check ml-auto">
+          <input type="checkbox"
+                 class="form-check-input clickable"
+                 id="exampleCheck1"
+                 [disabled]="state.running"
+                 [(ngModel)]="state.autoStartNextExercise">
+          <label class="form-check-label clickable"
+                 for="exampleCheck1">Automatycznie zacznij kolejne ćwiczenie</label>
+        </div>
+
+      </div>
+
+
+      <table class="table table-bordered table-hover mb-5">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nazwa ćwiczenia</th>
+            <th scope="col">Czas trwania powtórzenia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let exercise of state.exercises; let i = index"
+              (click)="selectExercise(exercise)"
+              [ngClass]="exercise.selected ? 'table-success' : ''"
+              class="clickable">
+            <th scope="row">{{i+1}}</th>
+            <td>
+              <span class="mr-2">{{exercise.name}}</span>
+              <i [hidden]="!exercise.finished"
+                 class="fa fa-check text-success mr-2"
+                 aria-hidden="true"></i>
+              <i [hidden]="!exercise.finished"
+                 class="fa fa-repeat clickable"
+                 aria-hidden="true"
+                 (click)="resetExercise(exercise); $event.stopPropagation();"></i>
+            </td>
+            <td>{{exercise.repDuration}}</td>
+            <td *ngFor="let rep of exercise.reps">
+              {{rep.duration - rep.elapsed}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <div class="row">
         <div class="col-8">
           <div class="card">
             <div class="card-body">
@@ -17,7 +84,7 @@
               <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
 
-              <div class="row mb-2">
+              <div class="row mb-4">
                 <div class="col-md-4">
                   <label for="exName">Nazwa ćwiczenia</label>
                   <input type="text"
@@ -29,12 +96,13 @@
                 </div>
                 <div class="col-md-4">
                   <label for="exRepCount">Powtórzenia</label>
-                  <input type="text"
+                  <input type="number"
                          class="form-control"
                          id="exRepCount"
                          placeholder="20"
-                         [(ngModel)]="newExerciseModel.repCount"
-                         disabled>
+                         min="1"
+                         max="30"
+                         [(ngModel)]="newExerciseModel.repCount">
                 </div>
 
                 <div class="col-md-4">
@@ -42,57 +110,21 @@
                   <input type="number"
                          class="form-control"
                          id="exDuration"
+                         min="1"
                          [(ngModel)]="newExerciseModel.repDuration"
                          required="">
                 </div>
               </div>
 
-              <a href="#"
-                 class="card-link"
-                 (click)="addExercise()">
-                <i class="fa fa-plus mr-1"></i>Dodaj</a>
-
+              <button class="card-link"
+                      (click)="addExercise()"
+                      [disabled]="this.state.running">
+                <i class="fa fa-plus mr-1"></i>Dodaj</button>
             </div>
           </div>
         </div>
       </div>
 
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nazwa ćwiczenia</th>
-            <th scope="col">Czas trwania powtórzenia</th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let ex of exerciseTable; let i = index">
-            <th scope="row">{{i+1}}</th>
-            <td>{{ex.name}}</td>
-            <td>{{ex.repDuration}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
 
     </div>
   </div>
