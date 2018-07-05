@@ -15,9 +15,10 @@ export class AppComponent implements OnInit {
     repCount: 1,
     repDuration: 1
   };
+  Math: any;
 
   constructor() {
-
+    this.Math = Math;
   }
 
   ngOnInit(): void {
@@ -134,14 +135,14 @@ export class AppComponent implements OnInit {
     }
 
     const rep = this.getRep(exercise, exercise.currentRepId);
-    if (rep.elapsed + 1 >= rep.duration) {
+    if (rep.elapsed + 100 >= rep.duration) {
       this.handleEndOfRep(rep);
       this.setNextRep(exercise);
       return;
     }
 
     rep.started = true;
-    rep.elapsed += 1;
+    rep.elapsed += 100;
   }
 
   private handleEndOfRep(rep: IRep) {
@@ -190,7 +191,7 @@ export class AppComponent implements OnInit {
   }
 
   private startClock() {
-    this.timerId = setInterval(() => { this.updateProgress(); }, 1000);
+    this.timerId = setInterval(() => { this.updateProgress(); }, 100);
   }
 
   private stopClock() {
@@ -211,13 +212,13 @@ export class AppComponent implements OnInit {
         id: 0,
         name: 'Ćwiczenie 01',
         currentRepId: 0,
-        repDuration: 3,
+        repDuration: 3000,
         reps: [{
           id: 0,
           paused: false,
           started: false,
           finished: false,
-          duration: 3,
+          duration: 16000,
           elapsed: 0
         },
         {
@@ -225,7 +226,7 @@ export class AppComponent implements OnInit {
           paused: false,
           started: false,
           finished: false,
-          duration: 3,
+          duration: 3000,
           elapsed: 0
         },
         {
@@ -233,7 +234,7 @@ export class AppComponent implements OnInit {
           paused: false,
           started: false,
           finished: false,
-          duration: 3,
+          duration: 3000,
           elapsed: 0
         },
         {
@@ -241,7 +242,7 @@ export class AppComponent implements OnInit {
           paused: false,
           started: false,
           finished: false,
-          duration: 3,
+          duration: 3000,
           elapsed: 0
         }
         ],
@@ -252,13 +253,13 @@ export class AppComponent implements OnInit {
         id: 1,
         name: 'Ćwiczenie 02',
         currentRepId: 0,
-        repDuration: 3,
+        repDuration: 3000,
         reps: [{
           id: 0,
           paused: false,
           started: false,
           finished: false,
-          duration: 3,
+          duration: 3000,
           elapsed: 0
         },
         {
@@ -266,7 +267,7 @@ export class AppComponent implements OnInit {
           paused: false,
           started: false,
           finished: false,
-          duration: 3,
+          duration: 3000,
           elapsed: 0
         }
         ],

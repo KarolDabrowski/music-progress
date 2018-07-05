@@ -68,8 +68,12 @@
                  (click)="resetExercise(exercise); $event.stopPropagation();"></i>
             </td>
             <td>{{exercise.repDuration}}</td>
-            <td *ngFor="let rep of exercise.reps">
-              {{rep.duration - rep.elapsed}}
+            <td style="width:100px;" *ngFor="let rep of exercise.reps">
+              <div class="progress">
+                <div class="progress-bar"
+                     role="progressbar"
+                     [ngStyle]="{'width': (100 * rep.elapsed)/rep.duration + '%' }">{{ Math.floor(rep.elapsed/1000)}}s</div>
+              </div>
             </td>
           </tr>
         </tbody>

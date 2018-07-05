@@ -1,6 +1,9 @@
 @import '~bootstrap/scss/bootstrap';
 
-
 .clickable {
- cursor:pointer !important;
+  cursor: pointer !important;
+}
+
+.progress-bar {
+  transition: width .1s linear;
 }
