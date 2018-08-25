@@ -21,11 +21,11 @@ export class AppComponent implements OnInit {
   audioSpriteData = {
     beepattention: {
       start: 0.0,
-      length: 0.05
+      length: 0.06
     },
     beephightone: {
       start: 0.4,
-      length: 0.138
+      length: 0.14
     }
   };
   currentSprite = {} as IAudioSprite;
@@ -306,6 +306,7 @@ export class AppComponent implements OnInit {
       if (this.Audio.currentTime >= this.currentSprite.start + this.currentSprite.length) {
 
         this.Audio.pause();
+        this.Audio.currentTime = this.currentSprite.start;
       }
     }, false);
   }
