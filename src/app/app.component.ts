@@ -16,9 +16,15 @@ export class AppComponent implements OnInit {
     repDuration: 1
   };
   Math: any;
+  Audio: any;
+  soundPaths: { [key: string]: string; } = {
+    'REP': '../assets/audio/beep-attention.wav',
+    'EXERCISE': '../assets/audio/beep-hightone.wav'
+  };
 
   constructor() {
     this.Math = Math;
+    this.Audio = new Audio();
   }
 
   ngOnInit(): void {
@@ -46,7 +52,7 @@ export class AppComponent implements OnInit {
         paused: false,
         started: false,
         finished: false,
-        duration: repDuration,
+        duration: repDuration * 1000,
         elapsed: 0
       });
     }
@@ -56,7 +62,7 @@ export class AppComponent implements OnInit {
       id: this.state.exerciseMaxIndex,
       name: name,
       reps: newReps,
-      repDuration: repDuration,
+      repDuration: repDuration * 1000,
       finished: false,
       selected: false,
       currentRepId: 0,
@@ -147,6 +153,7 @@ export class AppComponent implements OnInit {
 
   private handleEndOfRep(rep: IRep) {
     this.stopClock();
+    this.playSound('REP');
     rep.elapsed = rep.duration;
     rep.finished = true;
   }
@@ -163,6 +170,7 @@ export class AppComponent implements OnInit {
 
   private handleEndOfExercise(exercise: IExercise) {
     this.stopClock();
+    this.playSound('EXERCISE');
     exercise.finished = true;
     if (!this.state.autoStartNextExercise) {
       this.state.running = false;
@@ -218,7 +226,7 @@ export class AppComponent implements OnInit {
           paused: false,
           started: false,
           finished: false,
-          duration: 16000,
+          duration: 3000,
           elapsed: 0
         },
         {
@@ -279,7 +287,16 @@ export class AppComponent implements OnInit {
 
   }
 
+  private playSound(sound: soundType) {
+    this.Audio.src = this.soundPaths[sound];
+    this.Audio.load();
+    this.Audio.play();
+  }
+
 }
+
+export type soundType = 'REP' | 'EXERCISE';
+
 
 export interface IProgramState {
   running: boolean;

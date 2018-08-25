@@ -7,3 +7,23 @@
 .progress-bar {
   transition: width .1s linear;
 }
+
+.table-fixed{
+  table-layout: fixed;
+}
+
+.col-no {
+  width: 40px;
+}
+
+.col-name {
+  width: 200px;
+}
+
+.col-duration {
+  width: 60px;
+}
+
+.my-progress{
+  background-color: blue;
+}

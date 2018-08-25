@@ -1,9 +1,10 @@
-<div class="container">
-  <div class="py-5 text-center">
-    <h2>
-      <i class="fa fa-music mr-2"></i> Music progress</h2>
-    <p class="lead">Zaznacz ćwiczenie w tabeli, aby rozpocząć.</p>
-  </div>
+<div class="py-5 text-center">
+  <h2>
+    <i class="fa fa-music mr-2"></i> Music progress</h2>
+  <p class="lead">Zaznacz ćwiczenie w tabeli, aby rozpocząć.</p>
+</div>
+
+<div class="container-fluid">
 
   <div class="row">
     <div class="col-12">
@@ -43,12 +44,12 @@
       </div>
 
 
-      <table class="table table-bordered table-hover mb-5">
+      <table class="table table-bordered table-hover table-fixed mb-5">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nazwa ćwiczenia</th>
-            <th scope="col">Czas trwania powtórzenia</th>
+            <th scope="col" class="col-no">#</th>
+            <th scope="col" class="col-name">Nazwa ćwiczenia</th>
+            <th scope="col" class="col-duration">Czas</th>
           </tr>
         </thead>
         <tbody>
@@ -67,13 +68,14 @@
                  aria-hidden="true"
                  (click)="resetExercise(exercise); $event.stopPropagation();"></i>
             </td>
-            <td>{{exercise.repDuration}}</td>
-            <td style="width:100px;" *ngFor="let rep of exercise.reps">
-              <div class="progress">
+            <td>{{Math.floor(exercise.repDuration/1000)}}s</td>
+            <td *ngFor="let rep of exercise.reps">
+              <div class="">
                 <div class="progress-bar"
                      role="progressbar"
                      [ngStyle]="{'width': (100 * rep.elapsed)/rep.duration + '%' }">{{ Math.floor(rep.elapsed/1000)}}s</div>
               </div>
+
             </td>
           </tr>
         </tbody>
