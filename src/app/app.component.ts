@@ -73,6 +73,7 @@ export class AppComponent implements OnInit {
   }
 
   startButtonClicked() {
+    this.playSound('REP');
     if (this.state.running) {
       this.state.running = false;
       this.stopClock();
