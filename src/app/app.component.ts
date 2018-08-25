@@ -17,14 +17,21 @@ export class AppComponent implements OnInit {
   };
   Math: any;
   Audio: any;
-  soundPaths: { [key: string]: string; } = {
-    'REP': '../assets/audio/beep-attention.wav',
-    'EXERCISE': '../assets/audio/beep-hightone.wav'
+  audioSpritePath = '../assets/audio/beeps.wav';
+  audioSpriteData = {
+    beepattention: {
+      start: 0.0,
+      length: 0.05
+    },
+    beephightone: {
+      start: 0.4,
+      length: 0.138
+    }
   };
+  currentSprite = {} as IAudioSprite;
 
   constructor() {
     this.Math = Math;
-    this.Audio = new Audio();
   }
 
   ngOnInit(): void {
@@ -73,7 +80,7 @@ export class AppComponent implements OnInit {
   }
 
   startButtonClicked() {
-    this.playSound('REP');
+    this.initAudio(); // iOS requirement
     if (this.state.running) {
       this.state.running = false;
       this.stopClock();
@@ -288,9 +295,33 @@ export class AppComponent implements OnInit {
 
   }
 
+  private initAudio() {
+    // https://www.ibm.com/developerworks/library/wa-ioshtml5/
+    if (this.Audio instanceof Audio) {
+      return;
+    }
+    this.Audio = new Audio(this.audioSpritePath);
+    this.Audio.addEventListener('timeupdate', () => {
+      console.log(this.Audio.currentTime >= this.currentSprite.start + this.currentSprite.length);
+      if (this.Audio.currentTime >= this.currentSprite.start + this.currentSprite.length) {
+
+        this.Audio.pause();
+      }
+    }, false);
+  }
+
   private playSound(sound: soundType) {
-    this.Audio.src = this.soundPaths[sound];
-    this.Audio.load();
+    switch (sound) {
+      case 'EXERCISE':
+        this.currentSprite = this.audioSpriteData.beephightone;
+        this.Audio.currentTime = this.audioSpriteData.beephightone.start;
+        break;
+      default:
+        this.currentSprite = this.audioSpriteData.beepattention;
+        this.Audio.currentTime = this.audioSpriteData.beepattention.start;
+        break;
+    }
+
     this.Audio.play();
   }
 
@@ -298,6 +329,10 @@ export class AppComponent implements OnInit {
 
 export type soundType = 'REP' | 'EXERCISE';
 
+export interface IAudioSprite {
+  start: number;
+  length: number;
+}
 
 export interface IProgramState {
   running: boolean;
