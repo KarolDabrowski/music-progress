@@ -27,3 +27,29 @@
 .my-progress{
   background-color: blue;
 }
+
+.table-exercises{
+
+  .exercise{
+    border: 1px solid #dedede;
+    &:hover{
+      background-color: #e6e6e6;
+    }
+    &-selected{
+      background-color: #a3dca3;
+      .rep {
+        border: 1px solid #83c783;
+      }
+    }
+    &-name {
+      flex: 0 0 200px;
+    }
+    &-selected{
+
+    }
+  }
+  .rep {
+    border: 1px solid #dedede;
+    width: 100px;
+  }
+}

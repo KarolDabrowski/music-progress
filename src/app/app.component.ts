@@ -28,7 +28,74 @@ export class AppComponent implements OnInit {
       length: 0.14
     }
   };
-  currentSprite = {} as IAudioSprite;
+  currentAudioSprite = {} as IAudioSprite;
+  testExercises: IExercise[] = [{
+    id: 0,
+    name: 'Ćwiczenie 01',
+    currentRepId: 0,
+    repDuration: 3000,
+    reps: [{
+      id: 0,
+      paused: false,
+      started: false,
+      finished: false,
+      duration: 3000,
+      elapsed: 0
+    },
+    {
+      id: 1,
+      paused: false,
+      started: false,
+      finished: false,
+      duration: 3000,
+      elapsed: 0
+    },
+    {
+      id: 2,
+      paused: false,
+      started: false,
+      finished: false,
+      duration: 3000,
+      elapsed: 0
+    },
+    {
+      id: 3,
+      paused: false,
+      started: false,
+      finished: false,
+      duration: 3000,
+      elapsed: 0
+    }
+    ],
+    finished: false,
+    selected: false,
+    paused: false,
+  }, {
+    id: 1,
+    name: 'Ćwiczenie 02',
+    currentRepId: 0,
+    repDuration: 3000,
+    reps: [{
+      id: 0,
+      paused: false,
+      started: false,
+      finished: false,
+      duration: 3000,
+      elapsed: 0
+    },
+    {
+      id: 1,
+      paused: false,
+      started: false,
+      finished: false,
+      duration: 3000,
+      elapsed: 0
+    }
+    ],
+    finished: false,
+    selected: false,
+    paused: false,
+  }];
 
   constructor() {
     this.Math = Math;
@@ -132,6 +199,37 @@ export class AppComponent implements OnInit {
     });
   }
 
+  onRepCountInputWheel($event: WheelEvent) {
+    this.throttle(() => {
+      if ($event.wheelDelta > 0) {
+        this.newExerciseModel.repCount++;
+      } else {
+        if (this.newExerciseModel.repCount > 0) {
+          this.newExerciseModel.repCount--;
+        }
+      }
+    }, 1000);
+  }
+
+  onRepDurationInputWheel($event: WheelEvent) {
+    this.throttle(() => {
+      if ($event.wheelDelta > 0) {
+        this.newExerciseModel.repDuration++;
+      } else {
+        if (this.newExerciseModel.repDuration > 0) {
+          this.newExerciseModel.repDuration--;
+        }
+      }
+    }, 1000);
+  }
+
+  throttle(fn, wait: number) {
+    let time = Date.now();
+    if ((time + wait - Date.now()) < 0) {
+      fn();
+      time = Date.now();
+    }
+  }
 
   private clearSelection() {
     this.state.selectedExerciseId = -1;
@@ -224,73 +322,7 @@ export class AppComponent implements OnInit {
       selectedExerciseId: -1,
       autoStartNextExercise: false,
       exerciseMaxIndex: 1,
-      exercises: [{
-        id: 0,
-        name: 'Ćwiczenie 01',
-        currentRepId: 0,
-        repDuration: 3000,
-        reps: [{
-          id: 0,
-          paused: false,
-          started: false,
-          finished: false,
-          duration: 3000,
-          elapsed: 0
-        },
-        {
-          id: 1,
-          paused: false,
-          started: false,
-          finished: false,
-          duration: 3000,
-          elapsed: 0
-        },
-        {
-          id: 2,
-          paused: false,
-          started: false,
-          finished: false,
-          duration: 3000,
-          elapsed: 0
-        },
-        {
-          id: 3,
-          paused: false,
-          started: false,
-          finished: false,
-          duration: 3000,
-          elapsed: 0
-        }
-        ],
-        finished: false,
-        selected: false,
-        paused: false,
-      }, {
-        id: 1,
-        name: 'Ćwiczenie 02',
-        currentRepId: 0,
-        repDuration: 3000,
-        reps: [{
-          id: 0,
-          paused: false,
-          started: false,
-          finished: false,
-          duration: 3000,
-          elapsed: 0
-        },
-        {
-          id: 1,
-          paused: false,
-          started: false,
-          finished: false,
-          duration: 3000,
-          elapsed: 0
-        }
-        ],
-        finished: false,
-        selected: false,
-        paused: false,
-      }]
+      exercises: []
     };
 
   }
@@ -302,11 +334,10 @@ export class AppComponent implements OnInit {
     }
     this.Audio = new Audio(this.audioSpritePath);
     this.Audio.addEventListener('timeupdate', () => {
-      console.log(this.Audio.currentTime >= this.currentSprite.start + this.currentSprite.length);
-      if (this.Audio.currentTime >= this.currentSprite.start + this.currentSprite.length) {
+      if (this.Audio.currentTime >= this.currentAudioSprite.start + this.currentAudioSprite.length) {
 
         this.Audio.pause();
-        this.Audio.currentTime = this.currentSprite.start;
+        this.Audio.currentTime = this.currentAudioSprite.start;
       }
     }, false);
   }
@@ -314,11 +345,11 @@ export class AppComponent implements OnInit {
   private playSound(sound: soundType) {
     switch (sound) {
       case 'EXERCISE':
-        this.currentSprite = this.audioSpriteData.beephightone;
+        this.currentAudioSprite = this.audioSpriteData.beephightone;
         this.Audio.currentTime = this.audioSpriteData.beephightone.start;
         break;
       default:
-        this.currentSprite = this.audioSpriteData.beepattention;
+        this.currentAudioSprite = this.audioSpriteData.beepattention;
         this.Audio.currentTime = this.audioSpriteData.beepattention.start;
         break;
     }

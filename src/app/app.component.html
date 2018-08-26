@@ -1,15 +1,15 @@
 <div class="py-5 text-center">
   <h2>
     <i class="fa fa-music mr-2"></i> Music progress</h2>
-  <p class="lead">Zaznacz ćwiczenie w tabeli, aby rozpocząć.</p>
 </div>
 
-<div class="container-fluid">
+<div class="container">
 
   <div class="row">
     <div class="col-12">
 
-      <div class="d-flex align-items-center mb-2">
+      <div *ngIf="this.state.exercises.length > 0"
+           class="d-flex align-items-center mb-2">
         <button class="btn btn-primary mr-1"
                 (click)="startButtonClicked()"
                 [disabled]="actionButtonDisabled()">
@@ -43,55 +43,48 @@
 
       </div>
 
+      <div *ngIf="this.state.exercises.length > 0"
+           class="table-exercises d-flex flex-column mb-5">
+        <div *ngFor="let exercise of state.exercises; let i = index"
+             (click)="selectExercise(exercise)"
+             [ngClass]="exercise.selected ? 'exercise-selected' : ''"
+             class="d-flex flex-row exercise clickable p-2">
+          <div class="exercise-name p-2 ">
+            <span class="mr-2">{{exercise.name}} ({{Math.floor(exercise.repDuration/1000)}}s)</span>
+            <i [hidden]="!exercise.finished"
+               class="fa fa-check text-success mr-1"
+               aria-hidden="true"></i>
+            <i [hidden]="!exercise.finished"
+               class="fa fa-repeat clickable"
+               aria-hidden="true"
+               (click)="resetExercise(exercise); $event.stopPropagation();"></i>
 
-      <table class="table table-bordered table-hover table-fixed mb-5">
-        <thead>
-          <tr>
-            <th scope="col" class="col-no">#</th>
-            <th scope="col" class="col-name">Nazwa ćwiczenia</th>
-            <th scope="col" class="col-duration">Czas</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let exercise of state.exercises; let i = index"
-              (click)="selectExercise(exercise)"
-              [ngClass]="exercise.selected ? 'table-success' : ''"
-              class="clickable">
-            <th scope="row">{{i+1}}</th>
-            <td>
-              <span class="mr-2">{{exercise.name}}</span>
-              <i [hidden]="!exercise.finished"
-                 class="fa fa-check text-success mr-2"
-                 aria-hidden="true"></i>
-              <i [hidden]="!exercise.finished"
-                 class="fa fa-repeat clickable"
-                 aria-hidden="true"
-                 (click)="resetExercise(exercise); $event.stopPropagation();"></i>
-            </td>
-            <td>{{Math.floor(exercise.repDuration/1000)}}s</td>
-            <td *ngFor="let rep of exercise.reps">
-              <div class="">
-                <div class="progress-bar"
-                     role="progressbar"
-                     [ngStyle]="{'width': (100 * rep.elapsed)/rep.duration + '%' }">{{ Math.floor(rep.elapsed/1000)}}s</div>
-              </div>
+          </div>
+          <div class="exercise-reps p-2 d-flex flex-row flex-wrap">
+            <div class="rep d-flex p-2"
+                 *ngFor="let rep of exercise.reps">
+              <div class="progress-bar"
+                   role="progressbar"
+                   [ngStyle]="{'width': (100 * rep.elapsed)/rep.duration + '%' }">{{ Math.floor(rep.elapsed/1000)}}s</div>
 
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
 
 
-      <div class="row">
-        <div class="col-8">
+      <div class="row justify-content-center">
+        <div class="col-8 ">
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Dodaj ćwiczenie</h5>
               <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-
-              <div class="row mb-4">
-                <div class="col-md-4">
+              <div class="d-flex flex-row mb-4">
+                <div class="flex-fill p-2">
                   <label for="exName">Nazwa ćwiczenia</label>
                   <input type="text"
                          class="form-control"
@@ -100,29 +93,30 @@
                          [(ngModel)]="newExerciseModel.name">
 
                 </div>
-                <div class="col-md-4">
+                <div class="flex-fill p-2">
                   <label for="exRepCount">Powtórzenia</label>
                   <input type="number"
                          class="form-control"
                          id="exRepCount"
                          placeholder="20"
                          min="1"
-                         max="30"
+                         (wheel)="onRepCountInputWheel($event)"
                          [(ngModel)]="newExerciseModel.repCount">
                 </div>
 
-                <div class="col-md-4">
+                <div class="flex-fill p-2">
                   <label for="exDuration">Czas powtórki (sekundy)</label>
                   <input type="number"
                          class="form-control"
                          id="exDuration"
                          min="1"
+                         (wheel)="onRepDurationInputWheel($event)"
                          [(ngModel)]="newExerciseModel.repDuration"
                          required="">
                 </div>
               </div>
-
-              <button class="card-link"
+              <hr>
+              <button class="btn btn-default"
                       (click)="addExercise()"
                       [disabled]="this.state.running">
                 <i class="fa fa-plus mr-1"></i>Dodaj</button>
