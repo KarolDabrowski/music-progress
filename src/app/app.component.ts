@@ -20,12 +20,12 @@ export class AppComponent implements OnInit {
   audioSpritePath = '../assets/audio/beeps.wav';
   audioSpriteData = {
     beepattention: {
-      start: 0.0,
-      length: 0.06
+      start: 0.200,
+      length: 0.3
     },
     beephightone: {
-      start: 0.4,
-      length: 0.14
+      start: 1.0,
+      length: 0.290
     }
   };
   currentAudioSprite = {} as IAudioSprite;
